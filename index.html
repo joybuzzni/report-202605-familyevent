@@ -792,6 +792,150 @@
   <div class="section">
     <div class="section-title"><span class="num">09</span> 외부 환경 분석</div>
 
+    <!-- 매출 동향 vs 외부 환경 카드 -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title">매출 동향 vs 외부 환경 (일별)</div>
+      <div style="overflow-x:auto;">
+        <canvas id="trendChart" width="920" height="280" style="max-width:100%;display:block;"></canvas>
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--text-sub);">
+        <span><span style="display:inline-block;width:12px;height:3px;background:#4F6EF7;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>주문수량</span>
+        <span><span style="display:inline-block;width:12px;height:3px;background:#FF6B6B;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>기획전 유입</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#FFB347;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>어린이날</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#E74C3C;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>쿠팡 행사종료</span>
+        <span><span style="display:inline-block;width:10px;height:10px;background:#FF6B6B;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>어버이날</span>
+      </div>
+      <div class="notice" style="margin-top:10px;" id="trendInsight">
+        ⭐ <strong>5/5 어린이날</strong>: 주문수량 최고(5,207건) — 연휴 모바일 구매 집중. <strong>5/7 쿠팡 종료</strong> 다음날(5/8) 어버이날 구매 반등. <strong>5/9(토)</strong>: 기획전 유입 최고(8,640→8,598), 주문액 최고(5,348만원).
+      </div>
+    </div>
+    <script>
+    (function() {
+      var canvas = document.getElementById('trendChart');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var W = canvas.width, H = canvas.height;
+      var PAD = { top: 40, right: 30, bottom: 50, left: 60 };
+      var chartW = W - PAD.left - PAD.right;
+      var chartH = H - PAD.top - PAD.bottom;
+
+      var labels = ['5/4(월)', '5/5(화)', '5/6(수)', '5/7(목)', '5/8(금)', '5/9(토)', '5/10(일)'];
+      var orders = [3943, 5207, 3711, 3880, 4065, 4934, 4264];
+      var visits = [5655, 7806, 5725, 8640, 7114, 8598, 7531];
+
+      var events = [
+        { idx: 1, label: '어린이날', color: '#FFB347' },
+        { idx: 3, label: '쿠팡종료', color: '#E74C3C' },
+        { idx: 4, label: '어버이날', color: '#FF6B6B' }
+      ];
+
+      var maxOrders = Math.max.apply(null, orders);
+      var maxVisits = Math.max.apply(null, visits);
+      var n = labels.length;
+
+      function xPos(i) { return PAD.left + (i / (n - 1)) * chartW; }
+      function yOrders(v) { return PAD.top + chartH - (v / maxOrders) * chartH * 0.85; }
+      function yVisits(v) { return PAD.top + chartH - (v / maxVisits) * chartH * 0.85; }
+
+      function draw(hoverIdx) {
+        ctx.clearRect(0, 0, W, H);
+        ctx.strokeStyle = '#E2E6F0';
+        ctx.lineWidth = 1;
+        for (var g = 0; g <= 4; g++) {
+          var gy = PAD.top + (g / 4) * chartH;
+          ctx.beginPath(); ctx.moveTo(PAD.left, gy); ctx.lineTo(W - PAD.right, gy); ctx.stroke();
+        }
+        events.forEach(function(ev) {
+          var ex = xPos(ev.idx);
+          ctx.fillStyle = ev.color;
+          ctx.globalAlpha = 0.10;
+          ctx.fillRect(ex - chartW / (n - 1) / 2, PAD.top, chartW / (n - 1), chartH);
+          ctx.globalAlpha = 1.0;
+          ctx.fillStyle = ev.color;
+          ctx.font = 'bold 10px Apple SD Gothic Neo, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(ev.label, ex, PAD.top - 8);
+        });
+        ctx.beginPath();
+        ctx.strokeStyle = '#FF6B6B';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 3]);
+        visits.forEach(function(v, i) {
+          if (i === 0) ctx.moveTo(xPos(i), yVisits(v));
+          else ctx.lineTo(xPos(i), yVisits(v));
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.strokeStyle = '#4F6EF7';
+        ctx.lineWidth = 2.5;
+        orders.forEach(function(v, i) {
+          if (i === 0) ctx.moveTo(xPos(i), yOrders(v));
+          else ctx.lineTo(xPos(i), yOrders(v));
+        });
+        ctx.stroke();
+        orders.forEach(function(v, i) {
+          var px = xPos(i), py = yOrders(v);
+          var isHover = (hoverIdx === i);
+          ctx.beginPath();
+          ctx.arc(px, py, isHover ? 6 : 4, 0, Math.PI * 2);
+          ctx.fillStyle = isHover ? '#4F6EF7' : '#fff';
+          ctx.strokeStyle = '#4F6EF7';
+          ctx.lineWidth = 2;
+          ctx.fill(); ctx.stroke();
+          if (isHover) {
+            ctx.fillStyle = '#1A1D2E';
+            ctx.font = 'bold 12px Apple SD Gothic Neo, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(v.toLocaleString() + '건', px, py - 12);
+          }
+        });
+        visits.forEach(function(v, i) {
+          var px = xPos(i), py = yVisits(v);
+          var isHover = (hoverIdx === i);
+          ctx.beginPath();
+          ctx.arc(px, py, isHover ? 5 : 3, 0, Math.PI * 2);
+          ctx.fillStyle = isHover ? '#FF6B6B' : '#fff';
+          ctx.strokeStyle = '#FF6B6B';
+          ctx.lineWidth = 1.5;
+          ctx.fill(); ctx.stroke();
+          if (isHover) {
+            ctx.fillStyle = '#FF6B6B';
+            ctx.font = '11px Apple SD Gothic Neo, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('유입 ' + v.toLocaleString(), px, py + 18);
+          }
+        });
+        labels.forEach(function(l, i) {
+          ctx.fillStyle = '#5A5F7D';
+          ctx.font = '11px Apple SD Gothic Neo, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(l, xPos(i), H - 14);
+        });
+        ctx.fillStyle = '#4F6EF7';
+        ctx.font = '10px Apple SD Gothic Neo, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText('주문수량', PAD.left - 6, PAD.top + 8);
+      }
+
+      draw(-1);
+
+      canvas.addEventListener('mousemove', function(e) {
+        var rect = canvas.getBoundingClientRect();
+        var scaleX = canvas.width / rect.width;
+        var mx = (e.clientX - rect.left) * scaleX;
+        var closest = -1, minDist = Infinity;
+        labels.forEach(function(_, i) {
+          var d = Math.abs(xPos(i) - mx);
+          if (d < minDist) { minDist = d; closest = i; }
+        });
+        if (minDist < chartW / (n - 1) / 2) draw(closest);
+        else draw(-1);
+      });
+      canvas.addEventListener('mouseleave', function() { draw(-1); });
+    })();
+    </script>
+
     <div class="two-col" style="margin-bottom:14px;">
       <div class="card">
         <div class="card-title">연휴 & 기념일 영향</div>
@@ -847,167 +991,6 @@
       <div class="notice">⭐ 쿠팡 행사 종료(5/7) 이후 홈쇼핑모아 기획전 후반(5/8~11) 경쟁 강도 감소. 가정의달 30,004건/30.04억은 이커머스 정면 경쟁 환경 속 달성 결과.</div>
     </div>
   </div>
-
-    <!-- 매출 동향 vs 외부 환경 카드 -->
-    <div class="card" style="margin-top:14px;">
-      <div class="card-title">매출 동향 vs 외부 환경 (일별)</div>
-      <div style="overflow-x:auto;">
-        <canvas id="trendChart" width="920" height="280" style="max-width:100%;display:block;"></canvas>
-      </div>
-      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--text-sub);">
-        <span><span style="display:inline-block;width:12px;height:3px;background:#4F6EF7;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>주문수량</span>
-        <span><span style="display:inline-block;width:12px;height:3px;background:#FF6B6B;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>기획전 유입</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:#FFB347;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>어린이날</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:#E74C3C;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>쿠팡 행사종료</span>
-        <span><span style="display:inline-block;width:10px;height:10px;background:#FF6B6B;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>어버이날</span>
-      </div>
-      <div class="notice" style="margin-top:10px;" id="trendInsight">
-        ⭐ <strong>5/5 어린이날</strong>: 주문수량 최고(5,207건) — 연휴 모바일 구매 집중. <strong>5/7 쿠팡 종료</strong> 다음날(5/8) 어버이날 구매 반등. <strong>5/9(토)</strong>: 기획전 유입 최고(8,640→8,598), 주문액 최고(5,348만원).
-      </div>
-    </div>
-    <script>
-    (function() {
-      var canvas = document.getElementById('trendChart');
-      if (!canvas) return;
-      var ctx = canvas.getContext('2d');
-      var W = canvas.width, H = canvas.height;
-      var PAD = { top: 40, right: 30, bottom: 50, left: 60 };
-      var chartW = W - PAD.left - PAD.right;
-      var chartH = H - PAD.top - PAD.bottom;
-
-      var labels = ['5/4(월)', '5/5(화)', '5/6(수)', '5/7(목)', '5/8(금)', '5/9(토)', '5/10(일)'];
-      var orders = [3943, 5207, 3711, 3880, 4065, 4934, 4264];
-      var visits = [5655, 7806, 5725, 8640, 7114, 8598, 7531];
-
-      var events = [
-        { idx: 1, label: '어린이날', color: '#FFB347' },
-        { idx: 3, label: '쿠팡종료', color: '#E74C3C' },
-        { idx: 4, label: '어버이날', color: '#FF6B6B' }
-      ];
-
-      var maxOrders = Math.max.apply(null, orders);
-      var maxVisits = Math.max.apply(null, visits);
-      var n = labels.length;
-
-      function xPos(i) { return PAD.left + (i / (n - 1)) * chartW; }
-      function yOrders(v) { return PAD.top + chartH - (v / maxOrders) * chartH * 0.85; }
-      function yVisits(v) { return PAD.top + chartH - (v / maxVisits) * chartH * 0.85; }
-
-      function draw(hoverIdx) {
-        ctx.clearRect(0, 0, W, H);
-
-        // 배경 grid
-        ctx.strokeStyle = '#E2E6F0';
-        ctx.lineWidth = 1;
-        for (var g = 0; g <= 4; g++) {
-          var gy = PAD.top + (g / 4) * chartH;
-          ctx.beginPath(); ctx.moveTo(PAD.left, gy); ctx.lineTo(W - PAD.right, gy); ctx.stroke();
-        }
-
-        // 이벤트 배경 컬럼
-        events.forEach(function(ev) {
-          var ex = xPos(ev.idx);
-          ctx.fillStyle = ev.color;
-          ctx.globalAlpha = 0.10;
-          ctx.fillRect(ex - chartW / (n - 1) / 2, PAD.top, chartW / (n - 1), chartH);
-          ctx.globalAlpha = 1.0;
-          // 레이블
-          ctx.fillStyle = ev.color;
-          ctx.font = 'bold 10px Apple SD Gothic Neo, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(ev.label, ex, PAD.top - 8);
-        });
-
-        // 기획전 유입 선 (빨강)
-        ctx.beginPath();
-        ctx.strokeStyle = '#FF6B6B';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([5, 3]);
-        visits.forEach(function(v, i) {
-          if (i === 0) ctx.moveTo(xPos(i), yVisits(v));
-          else ctx.lineTo(xPos(i), yVisits(v));
-        });
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // 주문수량 선 (파랑)
-        ctx.beginPath();
-        ctx.strokeStyle = '#4F6EF7';
-        ctx.lineWidth = 2.5;
-        orders.forEach(function(v, i) {
-          if (i === 0) ctx.moveTo(xPos(i), yOrders(v));
-          else ctx.lineTo(xPos(i), yOrders(v));
-        });
-        ctx.stroke();
-
-        // 점 + 값 표시
-        orders.forEach(function(v, i) {
-          var px = xPos(i), py = yOrders(v);
-          var isHover = (hoverIdx === i);
-          ctx.beginPath();
-          ctx.arc(px, py, isHover ? 6 : 4, 0, Math.PI * 2);
-          ctx.fillStyle = isHover ? '#4F6EF7' : '#fff';
-          ctx.strokeStyle = '#4F6EF7';
-          ctx.lineWidth = 2;
-          ctx.fill(); ctx.stroke();
-          if (isHover) {
-            ctx.fillStyle = '#1A1D2E';
-            ctx.font = 'bold 12px Apple SD Gothic Neo, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(v.toLocaleString() + '건', px, py - 12);
-          }
-        });
-
-        visits.forEach(function(v, i) {
-          var px = xPos(i), py = yVisits(v);
-          var isHover = (hoverIdx === i);
-          ctx.beginPath();
-          ctx.arc(px, py, isHover ? 5 : 3, 0, Math.PI * 2);
-          ctx.fillStyle = isHover ? '#FF6B6B' : '#fff';
-          ctx.strokeStyle = '#FF6B6B';
-          ctx.lineWidth = 1.5;
-          ctx.fill(); ctx.stroke();
-          if (isHover) {
-            ctx.fillStyle = '#FF6B6B';
-            ctx.font = '11px Apple SD Gothic Neo, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('유입 ' + v.toLocaleString(), px, py + 18);
-          }
-        });
-
-        // X축 레이블
-        labels.forEach(function(l, i) {
-          ctx.fillStyle = '#5A5F7D';
-          ctx.font = '11px Apple SD Gothic Neo, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.fillText(l, xPos(i), H - 14);
-        });
-
-        // Y축 레이블
-        ctx.fillStyle = '#4F6EF7';
-        ctx.font = '10px Apple SD Gothic Neo, sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText('주문수량', PAD.left - 6, PAD.top + 8);
-      }
-
-      draw(-1);
-
-      // hover 인터랙션
-      canvas.addEventListener('mousemove', function(e) {
-        var rect = canvas.getBoundingClientRect();
-        var scaleX = canvas.width / rect.width;
-        var mx = (e.clientX - rect.left) * scaleX;
-        var closest = -1, minDist = Infinity;
-        labels.forEach(function(_, i) {
-          var d = Math.abs(xPos(i) - mx);
-          if (d < minDist) { minDist = d; closest = i; }
-        });
-        if (minDist < chartW / (n - 1) / 2) draw(closest);
-        else draw(-1);
-      });
-      canvas.addEventListener('mouseleave', function() { draw(-1); });
-    })();
-    </script>
 
   <!-- ══════════════ 10. 푸시 성과 ══════════════ -->
   <div class="section">
