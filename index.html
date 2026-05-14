@@ -359,6 +359,111 @@
       .ab-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 22px; }
     }
+
+    /* ── HINT INDICATOR ── */
+    .kpi-label, .card-title {
+      cursor: help;
+      position: relative;
+      transition: color 0.15s;
+    }
+    .kpi-label:hover, .card-title:hover {
+      color: #7B4FF7;
+    }
+    .kpi-label::after, .card-title::after {
+      content: ' ⊕';
+      color: #7B4FF7;
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.15s;
+      pointer-events: none;
+    }
+    .kpi-label:hover::after, .card-title:hover::after {
+      opacity: 1;
+    }
+
+    /* ── MODAL ── */
+    .info-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+    }
+    .info-modal-overlay.active { display: flex; }
+    .info-modal {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px 32px;
+      max-width: 560px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+      animation: modalIn 0.18s ease;
+    }
+    @keyframes modalIn {
+      from { opacity:0; transform: scale(0.95) translateY(8px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+    .info-modal-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #999;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+    .info-modal-close:hover { color: #333; }
+    .info-modal-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #4F6EF7;
+      margin-bottom: 16px;
+      padding-right: 24px;
+    }
+    .info-modal table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .info-modal thead th {
+      background: #F0F2FF;
+      color: #5A5F7D;
+      font-weight: 600;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid #E2E6F0;
+    }
+    .info-modal tbody td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #E2E6F0;
+      vertical-align: top;
+    }
+    .info-modal tbody tr:last-child td { border-bottom: none; }
+    .info-modal-source {
+      font-size: 12px;
+      color: #5A5F7D;
+      background: #F5F7FF;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+    }
+    .info-modal-source strong { color: #4F6EF7; }
+    .info-modal-note {
+      font-size: 12px;
+      color: #5A5F7D;
+      line-height: 1.6;
+      border-left: 3px solid #9B59B6;
+      padding-left: 10px;
+    }
   </style>
 </head>
 <body>
@@ -837,6 +942,374 @@
   기준 데이터: 2026 가정의달 기획전 종합 성과 시트 (fileId: 1Xinw5H6rJEfe0bUqjsAnPzaNtFmnn_QcY1E3C-K8Wtw)<br>
   작성일 2026.05.13 · 홈쇼핑모아 그로스팀
 </div>
+
+<!-- ── INFO MODAL ── -->
+<div class="info-modal-overlay" id="infoModalOverlay">
+  <div class="info-modal" id="infoModal">
+    <button class="info-modal-close" id="infoModalClose">✕</button>
+    <div class="info-modal-title" id="infoModalTitle"></div>
+    <table id="infoModalTable">
+      <thead id="infoModalThead"></thead>
+      <tbody id="infoModalTbody"></tbody>
+    </table>
+    <div class="info-modal-source" id="infoModalSource"></div>
+    <div class="info-modal-note" id="infoModalNote"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const INFO_MAP = {
+    "총 주문수량": {
+      title: "총 주문수량",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["총 주문수량", "30,004건", "행사 기간 내 전체 주문 합산"],
+        ["비교 기준", "동일제휴사", "설날홈대전과 같은 제휴사만 포함"],
+        ["QoQ 변화", "+19.1%", "설날 25,187건 → 가정의달 30,004건"]
+      ],
+      source: "Budibase 주문 데이터 (제휴사별 집계)",
+      note: "동일제휴사 기준: 홈앤쇼핑·CJ 등 설날 미참여사 제외 후 비교. 전체 행사 총 주문수와 다를 수 있음."
+    },
+    "총 주문액": {
+      title: "총 주문액",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["총 주문액", "30.04억 (3,004,365,650원)", "행사 기간 전체 주문액 합산"],
+        ["QoQ 변화", "+9.3%", "설날 27.50억 → 가정의달 30.04억"],
+        ["일평균 주문액", "약 4.29억/일", "총액 ÷ 7일"]
+      ],
+      source: "Budibase 주문 데이터",
+      note: "QoQ 비교는 동일제휴사 기준 적용."
+    },
+    "ROAS": {
+      title: "ROAS (Return On Ad Spend)",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["ROAS", "822배", "총 주문액 ÷ 마케팅 예산"],
+        ["총 주문액", "30.04억", "행사 전체 주문액"],
+        ["마케팅 예산", "3,652,730원", "광고·프로모션 집행 비용"],
+        ["QoQ 변화", "+52.8%", "설날 538배 → 가정의달 822배"]
+      ],
+      source: "마케팅팀 예산 자료 + Budibase 주문 데이터",
+      note: "마케팅 예산 34% 감소 + 주문수 증가가 복합적으로 ROAS 향상에 기여."
+    },
+    "CPA": {
+      title: "CPA (Cost Per Acquisition)",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["CPA", "121.7원/건", "마케팅 예산 ÷ 총 주문수"],
+        ["마케팅 예산", "3,652,730원", "-"],
+        ["총 주문수", "30,004건", "-"],
+        ["QoQ 변화", "-38.7%", "설날 198.6원 → 가정의달 121.7원"]
+      ],
+      source: "마케팅팀 예산 자료 + Budibase 주문 데이터",
+      note: "CPA는 낮을수록 광고 효율이 높음. 설날 대비 38.7% 절감 달성."
+    },
+    "UV→구매 전환율": {
+      title: "UV→구매 전환율",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["전환율", "2.66%", "총 주문수 ÷ 총 UV × 100"],
+        ["총 주문수", "30,004건", "-"],
+        ["총 UV", "약 483,547", "기획전 순방문자"],
+        ["QoQ 비교", "+0.86%p", "설날 1.80% → 가정의달 2.66%"]
+      ],
+      source: "Kibana UV 데이터 + Budibase 주문 데이터",
+      note: "UV는 중복 제거된 순방문자(Unique Visitor) 기준."
+    },
+    "기획전 총 유입": {
+      title: "기획전 총 유입",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["총 유입", "219,686건", "farm + moa 합산"],
+        ["farm 유입", "186,362건 (84.8%)", "광고/농장 경유 유입"],
+        ["moa 유입", "33,324건 (15.2%)", "앱 내 순수 유입"]
+      ],
+      source: "Kibana 트래픽 로그 (farm/moa 구분)",
+      note: "farm = 외부 광고·트래픽 농장을 통해 기획전 페이지로 유입된 수. moa = 앱 내부에서 직접 진입한 순수 유입수."
+    },
+    "포인트알람 설정": {
+      title: "포인트알람 설정",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["포인트알람 설정", "36,593건", "행사 기간 내 포인트알람 등록 합계"],
+        ["방송알람 설정", "122건", "방송 알람 별도 집계"],
+        ["최다 알람 영역", "기획전_가전 6,850건", "Comp별 알람 Top 1"]
+      ],
+      source: "Kibana 컴포넌트 클릭/알람 로그",
+      note: "포인트알람 = 특정 상품이나 방송의 시작 전에 알림을 받겠다고 설정하는 기능."
+    },
+    "복권 전환율": {
+      title: "복권 전환율",
+      rows: [
+        ["항목", "값", "산출 방식"],
+        ["복권 전환율", "8.91%", "복권 참여수 ÷ moa 유입수 × 100"],
+        ["복권 참여수", "2,969건", "행사 기간 내 복권 긁기 참여"],
+        ["moa 유입수", "33,324건", "앱 내 순수 유입 기준"],
+        ["QoQ 비교", "+2.2배", "설날 4.01% → 가정의달 8.91%"]
+      ],
+      source: "Kibana moa 이벤트 로그",
+      note: "전환율 분모는 moa 기준 유입수(33,324). farm 포함 총 유입(219,686) 대비로 보면 1.35% 수준."
+    },
+    "유입 경로 구성 (farm vs moa)": {
+      title: "유입 경로 구성",
+      rows: [
+        ["경로", "건수", "비중"],
+        ["farm (광고/농장 경유)", "186,362건", "84.8%"],
+        ["moa (앱 내 순수 유입)", "33,324건", "15.2%"],
+        ["합계", "219,686건", "100%"]
+      ],
+      source: "Kibana 트래픽 로그",
+      note: "farm 비중 84.8%는 광고 드리븐 행사임을 의미. moa 15.2%는 앱 자체 충성 사용자 유입."
+    },
+    "일평균 UV 비교 (설날 vs 가정의달)": {
+      title: "일평균 UV 비교",
+      rows: [
+        ["행사", "총 UV", "일수", "일평균 UV"],
+        ["설날홈대전", "477,422", "7일", "68,203"],
+        ["가정의달", "483,547", "7일", "69,078"],
+        ["차이", "+6,125", "-", "+0.9%"]
+      ],
+      source: "Kibana UV 로그 (중복 제거 순방문자)",
+      note: "설날은 farm 총 유입이 더 많았지만, 일평균 UV는 가정의달과 거의 동일. 설날의 높은 farm 유입은 동일 유저의 재방문이거나 이슈성 유입으로 해석됨."
+    },
+    "이벤트 구성 비교": {
+      title: "이벤트 구성 비교",
+      rows: [
+        ["이벤트", "오월愛(25년)", "설날홈대전(26년)", "가정의달(26년)"],
+        ["복권 긁기", "없음", "✅", "✅ 용돈봉투"],
+        ["구매 인증", "없음", "✅", "✅ 사랑의 영수증"],
+        ["사연 응모", "없음", "❌", "✅ 한줄편지"],
+        ["생방송 2배 적립", "없음", "✅", "❌"]
+      ],
+      source: "기획팀 이벤트 기획서",
+      note: "가정의달은 가정의달 테마에 맞춘 네이밍(용돈봉투·사랑의 영수증·한줄편지) 적용. 한줄편지는 이번 행사 최초 도입."
+    },
+    "핵심 지표 비교 (설날 vs 가정의달, moa 기준)": {
+      title: "핵심 지표 비교 (moa 기준)",
+      rows: [
+        ["지표", "설날홈대전", "가정의달", "증감"],
+        ["총 유입수", "128,398", "33,324", "-74%"],
+        ["일평균 UV", "68,203", "69,078", "≈동일"],
+        ["복권 참여수", "5,152", "2,969", "-42%"],
+        ["복권 전환율", "4.01%", "8.91%", "+2.2배"],
+        ["구매인증 응모", "243", "91", "-63%"],
+        ["응모 전환율", "0.19%", "0.27%", "소폭 상승"],
+        ["한줄편지", "없음", "1,418건 (4.26%)", "신규"]
+      ],
+      source: "Kibana moa 이벤트 로그",
+      note: "moa 기준 = 앱 내부 유입만 포함. farm 유입은 제외. 전환율은 moa 유입수 대비 이벤트 참여율."
+    },
+    "가정의달 일별 이벤트 상세 (moa 기준)": {
+      title: "일별 이벤트 상세 (moa 기준)",
+      rows: [
+        ["항목", "설명"],
+        ["유입수", "해당일 moa 기준 기획전 유입수"],
+        ["한줄편지", "사연 응모 이벤트 참여수"],
+        ["사연전환율", "한줄편지 참여수 ÷ 유입수"],
+        ["복권", "복권긁기 이벤트 참여수"],
+        ["복권전환율", "복권 참여수 ÷ 유입수"],
+        ["구매인증", "사랑의 영수증 응모수"]
+      ],
+      source: "Kibana moa 이벤트 로그 (일별)",
+      note: "5/7(목) 한줄편지 13.31% 스파이크는 팝업 노출 타이밍 집중으로 추정. 5/8 복권에러로 해당일 복권전환율 저하."
+    },
+    "Comp 클릭 Top 13": {
+      title: "컴포넌트 클릭 Top 13",
+      rows: [
+        ["항목", "설명"],
+        ["측정 단위", "클릭수 (중복 포함)"],
+        ["수집 기간", "2026.5.4~5.11 (moa+farm 통합)"],
+        ["1위 복권긁기", "8,556 — 이벤트 참여 의지 반영"],
+        ["2위 기획전_가전", "7,056 — 편성 6.4% 대비 고효율"]
+      ],
+      source: "Kibana 컴포넌트 클릭 로그 (Comp 이름 기준)",
+      note: "Comp 클릭 = 기획전 페이지 내 각 영역(섹션·버튼·배너)별 클릭 이벤트. 동일 유저 중복 클릭 포함."
+    },
+    "영역별 포인트알람 설정 Top 10": {
+      title: "영역별 포인트알람 설정 Top 10",
+      rows: [
+        ["항목", "설명"],
+        ["측정 단위", "알람 설정 건수"],
+        ["수집 기간", "2026.5.4~5.11"],
+        ["1위 기획전_가전", "6,850 — 알람 최다 영역"],
+        ["2위 포인트사용관", "6,481 — 바로결제 영역"]
+      ],
+      source: "Kibana 포인트알람 이벤트 로그",
+      note: "포인트알람 설정 = 상품/방송 시작 전 알림 받기 선택. 복권긁기는 알람 대상 아님 → 클릭 1위지만 알람 집계 미포함."
+    },
+    "A/B 일별 상품 클릭": {
+      title: "A/B 테스트 — 탭 디자인 일별 상품 클릭",
+      rows: [
+        ["항목", "설명"],
+        ["A안", "탭에 이모지 있음"],
+        ["B안", "탭에 이모지 없음 (승자)"],
+        ["총 클릭 차이", "A 1,924 vs B 1,945 (+1.1%)"],
+        ["알람 차이", "A 59 vs B 75 (+27.1%)"]
+      ],
+      source: "Kibana A/B 이벤트 로그",
+      note: "상품 클릭 차이는 미미(+1.1%)하지만, 알람 전환에서 B안이 +27.1% 우세. 이모지 제거가 알람 클릭 집중도를 높인 것으로 해석."
+    },
+    "총 편성 상품 15,031개 · 분류율 99.5%": {
+      title: "편성정보 카테고리 분석",
+      rows: [
+        ["카테고리", "상품수", "비중"],
+        ["패션의류", "5,598개", "37.2%"],
+        ["뷰티", "2,208개", "14.7%"],
+        ["생활/주방", "2,121개", "14.1%"],
+        ["식품/건강", "2,056개", "13.7%"],
+        ["패션잡화", "1,413개", "9.4%"],
+        ["가전/디지털", "960개", "6.4%"],
+        ["기타", "674개", "4.5%"]
+      ],
+      source: "편성정보 시트 (카테고리 자동 분류, 분류율 99.5%)",
+      note: "총 15,031개 중 75개(0.5%)는 미분류. 가전/디지털은 편성 비중 6.4%지만 Comp 클릭·알람 설정 모두 최상위 효율."
+    },
+    "연휴 & 기념일 영향": {
+      title: "연휴 & 기념일 영향",
+      rows: [
+        ["날짜", "기념일", "쇼핑 영향"],
+        ["5/4(월)", "행사 오픈", "황금연휴 연결 분위기"],
+        ["5/5(화)", "어린이날", "가족 나들이 → 모바일 분산"],
+        ["5/6(수)", "대체공휴일", "연휴 마지막"],
+        ["5/7(목)", "평일 복귀", "쇼핑 집중 재개"],
+        ["5/8(금)", "어버이날", "선물 구매 피크"],
+        ["5/9~10", "주말", "주말 쇼핑 활성화"],
+        ["5/11(월)", "행사 마감", "마감 유입"]
+      ],
+      source: "공휴일 기준 + 내부 유입 데이터 대조",
+      note: "어버이날(5/8)이 포함된 주말 직전 금요일로 선물 구매 수요 집중 예상. 실제 5/9(토) moa 유입 5,613건으로 일간 최대."
+    },
+    "날씨 영향 (서울 기준)": {
+      title: "날씨 영향 (서울 기준)",
+      rows: [
+        ["날짜", "날씨", "기온", "영향"],
+        ["5/4(월)", "비/흐림", "20°C/9°C", "야외 제한 → 유리"],
+        ["5/5(화)", "맑음", "-", "나들이 집중"],
+        ["5/8(금)", "구름", "18-23°C", "어버이날 구매"],
+        ["5/11(월)", "비", "-", "마감일 소폭 영향"]
+      ],
+      source: "기상청 서울 날씨 기록 (2026년 5월)",
+      note: "5/4 오픈일 비 날씨는 야외 이동 제한으로 기획전 유입에 긍정적으로 작용. 맑은 날(5/5~6)은 어린이날 나들이로 쇼핑 분산."
+    },
+    "경쟁사 동향": {
+      title: "경쟁사 동향",
+      rows: [
+        ["경쟁사", "행사명", "기간", "주요 내용"],
+        ["쿠팡", "가정의달 빅세일", "~5/7", "와우회원 최대 50% 할인"],
+        ["쿠팡", "홈앤리빙 빅세일", "~5/7", "부모님 선물 기획전"],
+        ["SSG·G마켓·11번가", "가정의달 프로모션", "5월", "동시 진행"],
+        ["네이버쇼핑", "LG그램 협업", "5월", "쿠폰 최대 20만원"]
+      ],
+      source: "경쟁사 공개 프로모션 정보 (5월 기준)",
+      note: "쿠팡 행사가 5/7에 종료되어, 홈쇼핑모아 기획전 후반(5/8~11) 경쟁 강도 감소. 30.04억은 이커머스 경쟁 환경 속 달성 수치."
+    },
+    "3개 행사 CTR 비교 (홈대전 타입 | 2026.2.2 이후 ×1.8 보정 적용)": {
+      title: "푸시 CTR 비교 (보정 포함)",
+      rows: [
+        ["행사", "발송건수", "실제 CTR", "보정 CTR"],
+        ["오월愛 (25.5)", "11건", "1.28%", "1.28% (보정 불필요)"],
+        ["설날홈대전 (26.2)", "6건", "0.69%", "→ 1.24%"],
+        ["가정의달 (26.5)", "5건", "0.80%", "→ 1.44%"]
+      ],
+      source: "푸시 발송 시스템 + Kibana CTR 로그",
+      note: "2026.2.2 이후 개발 이슈로 CTR이 실제의 약 1/1.8로 축소 기록됨. 이를 보정하여 ×1.8 적용. 가정의달 보정 CTR 1.44%는 오월愛 대비 +12.5% 우세."
+    },
+    "가정의달 일별 푸시 성과": {
+      title: "일별 푸시 성과",
+      rows: [
+        ["항목", "설명"],
+        ["발송건수", "해당일 발송된 푸시 메시지 수"],
+        ["CTR", "클릭수 ÷ 발송수 × 100 (실측값)"],
+        ["보정 CTR", "실측 CTR × 1.8 (2/2 이후 이슈 보정)"],
+        ["정책", "2회/일 (2026.3.27 변경 기준)"]
+      ],
+      source: "푸시 발송 시스템 + Kibana CTR 로그",
+      note: "2026.3.27부터 푸시 정책이 3회/일 → 2회/일로 변경됨. 가정의달은 2회/일 정책 첫 적용 행사."
+    }
+  };
+
+  const overlay = document.getElementById('infoModalOverlay');
+  const modalTitle = document.getElementById('infoModalTitle');
+  const modalThead = document.getElementById('infoModalThead');
+  const modalTbody = document.getElementById('infoModalTbody');
+  const modalSource = document.getElementById('infoModalSource');
+  const modalNote = document.getElementById('infoModalNote');
+  const closeBtn = document.getElementById('infoModalClose');
+
+  function showModal(info) {
+    modalTitle.textContent = info.title || '';
+
+    // 테이블 렌더링
+    modalThead.innerHTML = '';
+    modalTbody.innerHTML = '';
+
+    if (info.rows && info.rows.length > 0) {
+      // 첫 행을 thead로, 나머지를 tbody로
+      const headRow = document.createElement('tr');
+      info.rows[0].forEach(function(cell) {
+        const th = document.createElement('th');
+        th.textContent = cell;
+        headRow.appendChild(th);
+      });
+      modalThead.appendChild(headRow);
+
+      for (let i = 1; i < info.rows.length; i++) {
+        const tr = document.createElement('tr');
+        info.rows[i].forEach(function(cell) {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        modalTbody.appendChild(tr);
+      }
+    }
+
+    // 테이블이 없는 경우 숨김
+    const table = document.getElementById('infoModalTable');
+    table.style.display = (info.rows && info.rows.length > 0) ? 'table' : 'none';
+
+    modalSource.innerHTML = '<strong>데이터 출처:</strong> ' + (info.source || '-');
+    modalNote.textContent = info.note || '';
+    modalNote.style.display = info.note ? 'block' : 'none';
+
+    overlay.classList.add('active');
+  }
+
+  function closeModal() {
+    overlay.classList.remove('active');
+  }
+
+  // 더블클릭 이벤트 등록
+  document.querySelectorAll('.kpi-label, .card-title').forEach(function(el) {
+    el.addEventListener('dblclick', function(e) {
+      e.stopPropagation();
+      const key = el.textContent.trim();
+      const info = INFO_MAP[key];
+      showModal(info || {
+        title: key,
+        rows: [],
+        source: '-',
+        note: '상세 정보가 준비 중인 항목입니다.'
+      });
+    });
+  });
+
+  // 닫기: ✕ 버튼
+  closeBtn.addEventListener('click', closeModal);
+
+  // 닫기: 오버레이 바깥 클릭
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  // 닫기: ESC 키
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+})();
+</script>
 
 </body>
 </html>
