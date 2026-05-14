@@ -796,7 +796,7 @@
     <div class="card" style="margin-bottom:14px;">
       <div class="card-title">매출 동향 vs 외부 환경 (일별)</div>
       <div style="overflow-x:auto;">
-        <canvas id="trendChart" width="920" height="280" style="max-width:100%;display:block;"></canvas>
+        <canvas id="trendChart" width="920" height="310" style="max-width:100%;display:block;"></canvas>
       </div>
       <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--text-sub);">
         <span><span style="display:inline-block;width:12px;height:3px;background:#4F6EF7;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>주문수량</span>
@@ -804,6 +804,7 @@
         <span><span style="display:inline-block;width:10px;height:10px;background:#FFB347;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>어린이날</span>
         <span><span style="display:inline-block;width:10px;height:10px;background:#E74C3C;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>쿠팡 행사종료</span>
         <span><span style="display:inline-block;width:10px;height:10px;background:#FF6B6B;border-radius:2px;vertical-align:middle;margin-right:4px;opacity:0.5;"></span>어버이날</span>
+        <span>날씨: ☔비/흐림 ☀️맑음 🌫️안개 ☁️구름</span>
       </div>
       <div class="notice" style="margin-top:10px;" id="trendInsight">
         ⭐ <strong>5/5 어린이날</strong>: 주문수량 최고(5,207건) — 연휴 모바일 구매 집중. <strong>5/7 쿠팡 종료</strong> 다음날(5/8) 어버이날 구매 반등. <strong>5/9(토)</strong>: 기획전 유입 최고(8,640→8,598), 주문액 최고(5,348만원).
@@ -815,13 +816,14 @@
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var W = canvas.width, H = canvas.height;
-      var PAD = { top: 40, right: 30, bottom: 50, left: 60 };
+      var PAD = { top: 40, right: 30, bottom: 80, left: 60 };
       var chartW = W - PAD.left - PAD.right;
       var chartH = H - PAD.top - PAD.bottom;
 
-      var labels = ['5/4(월)', '5/5(화)', '5/6(수)', '5/7(목)', '5/8(금)', '5/9(토)', '5/10(일)'];
-      var orders = [3943, 5207, 3711, 3880, 4065, 4934, 4264];
-      var visits = [5655, 7806, 5725, 8640, 7114, 8598, 7531];
+      var labels  = ['5/4(월)', '5/5(화)', '5/6(수)', '5/7(목)', '5/8(금)', '5/9(토)', '5/10(일)'];
+      var orders  = [3943, 5207, 3711, 3880, 4065, 4934, 4264];
+      var visits  = [5655, 7806, 5725, 8640, 7114, 8598, 7531];
+      var weather = ['☔', '☀️', '☀️', '🌫️', '☁️', '☀️', '☀️'];
 
       var events = [
         { idx: 1, label: '어린이날', color: '#FFB347' },
@@ -837,18 +839,54 @@
       function yOrders(v) { return PAD.top + chartH - (v / maxOrders) * chartH * 0.85; }
       function yVisits(v) { return PAD.top + chartH - (v / maxVisits) * chartH * 0.85; }
 
-      function draw(hoverIdx) {
-        ctx.clearRect(0, 0, W, H);
+      function drawTooltipBox(hoverIdx) {
+        if (hoverIdx < 0) return;
+        var bx = W - PAD.right - 160, by = PAD.top + 4;
+        var bw = 155, bh = 62, br = 8;
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
         ctx.strokeStyle = '#E2E6F0';
         ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(bx + br, by); ctx.lineTo(bx + bw - br, by);
+        ctx.arcTo(bx + bw, by, bx + bw, by + br, br);
+        ctx.lineTo(bx + bw, by + bh - br);
+        ctx.arcTo(bx + bw, by + bh, bx + bw - br, by + bh, br);
+        ctx.lineTo(bx + br, by + bh);
+        ctx.arcTo(bx, by + bh, bx, by + bh - br, br);
+        ctx.lineTo(bx, by + br);
+        ctx.arcTo(bx, by, bx + br, by, br);
+        ctx.closePath();
+        ctx.fill(); ctx.stroke();
+
+        var d = labels[hoverIdx];
+        ctx.fillStyle = '#5A5F7D';
+        ctx.font = 'bold 11px Apple SD Gothic Neo, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(d + '  ' + weather[hoverIdx], bx + 10, by + 18);
+
+        ctx.fillStyle = '#4F6EF7';
+        ctx.font = 'bold 12px Apple SD Gothic Neo, sans-serif';
+        ctx.fillText('주문  ' + orders[hoverIdx].toLocaleString() + '건', bx + 10, by + 36);
+
+        ctx.fillStyle = '#FF6B6B';
+        ctx.font = '11px Apple SD Gothic Neo, sans-serif';
+        ctx.fillText('유입  ' + visits[hoverIdx].toLocaleString(), bx + 10, by + 52);
+      }
+
+      function draw(hoverIdx) {
+        ctx.clearRect(0, 0, W, H);
+
+        // grid
+        ctx.strokeStyle = '#E2E6F0'; ctx.lineWidth = 1;
         for (var g = 0; g <= 4; g++) {
           var gy = PAD.top + (g / 4) * chartH;
           ctx.beginPath(); ctx.moveTo(PAD.left, gy); ctx.lineTo(W - PAD.right, gy); ctx.stroke();
         }
+
+        // 이벤트 배경
         events.forEach(function(ev) {
           var ex = xPos(ev.idx);
-          ctx.fillStyle = ev.color;
-          ctx.globalAlpha = 0.10;
+          ctx.fillStyle = ev.color; ctx.globalAlpha = 0.10;
           ctx.fillRect(ex - chartW / (n - 1) / 2, PAD.top, chartW / (n - 1), chartH);
           ctx.globalAlpha = 1.0;
           ctx.fillStyle = ev.color;
@@ -856,64 +894,62 @@
           ctx.textAlign = 'center';
           ctx.fillText(ev.label, ex, PAD.top - 8);
         });
-        ctx.beginPath();
-        ctx.strokeStyle = '#FF6B6B';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([5, 3]);
-        visits.forEach(function(v, i) {
-          if (i === 0) ctx.moveTo(xPos(i), yVisits(v));
-          else ctx.lineTo(xPos(i), yVisits(v));
-        });
+
+        // 유입 선 (빨강 점선)
+        ctx.beginPath(); ctx.strokeStyle = '#FF6B6B'; ctx.lineWidth = 2; ctx.setLineDash([5, 3]);
+        visits.forEach(function(v, i) { i === 0 ? ctx.moveTo(xPos(i), yVisits(v)) : ctx.lineTo(xPos(i), yVisits(v)); });
+        ctx.stroke(); ctx.setLineDash([]);
+
+        // 주문 선 (파랑 실선)
+        ctx.beginPath(); ctx.strokeStyle = '#4F6EF7'; ctx.lineWidth = 2.5;
+        orders.forEach(function(v, i) { i === 0 ? ctx.moveTo(xPos(i), yOrders(v)) : ctx.lineTo(xPos(i), yOrders(v)); });
         ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.beginPath();
-        ctx.strokeStyle = '#4F6EF7';
-        ctx.lineWidth = 2.5;
+
+        // 주문 점
         orders.forEach(function(v, i) {
-          if (i === 0) ctx.moveTo(xPos(i), yOrders(v));
-          else ctx.lineTo(xPos(i), yOrders(v));
-        });
-        ctx.stroke();
-        orders.forEach(function(v, i) {
-          var px = xPos(i), py = yOrders(v);
-          var isHover = (hoverIdx === i);
-          ctx.beginPath();
-          ctx.arc(px, py, isHover ? 6 : 4, 0, Math.PI * 2);
-          ctx.fillStyle = isHover ? '#4F6EF7' : '#fff';
-          ctx.strokeStyle = '#4F6EF7';
-          ctx.lineWidth = 2;
+          var px = xPos(i), py = yOrders(v), isH = (hoverIdx === i);
+          ctx.beginPath(); ctx.arc(px, py, isH ? 6 : 4, 0, Math.PI * 2);
+          ctx.fillStyle = isH ? '#4F6EF7' : '#fff';
+          ctx.strokeStyle = '#4F6EF7'; ctx.lineWidth = 2;
           ctx.fill(); ctx.stroke();
-          if (isHover) {
-            ctx.fillStyle = '#1A1D2E';
-            ctx.font = 'bold 12px Apple SD Gothic Neo, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(v.toLocaleString() + '건', px, py - 12);
-          }
         });
+
+        // 유입 점
         visits.forEach(function(v, i) {
-          var px = xPos(i), py = yVisits(v);
-          var isHover = (hoverIdx === i);
-          ctx.beginPath();
-          ctx.arc(px, py, isHover ? 5 : 3, 0, Math.PI * 2);
-          ctx.fillStyle = isHover ? '#FF6B6B' : '#fff';
-          ctx.strokeStyle = '#FF6B6B';
-          ctx.lineWidth = 1.5;
+          var px = xPos(i), py = yVisits(v), isH = (hoverIdx === i);
+          ctx.beginPath(); ctx.arc(px, py, isH ? 5 : 3, 0, Math.PI * 2);
+          ctx.fillStyle = isH ? '#FF6B6B' : '#fff';
+          ctx.strokeStyle = '#FF6B6B'; ctx.lineWidth = 1.5;
           ctx.fill(); ctx.stroke();
-          if (isHover) {
-            ctx.fillStyle = '#FF6B6B';
-            ctx.font = '11px Apple SD Gothic Neo, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('유입 ' + v.toLocaleString(), px, py + 18);
-          }
         });
+
+        // 호버 수직선
+        if (hoverIdx >= 0) {
+          ctx.strokeStyle = 'rgba(79,110,247,0.25)'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+          ctx.beginPath(); ctx.moveTo(xPos(hoverIdx), PAD.top); ctx.lineTo(xPos(hoverIdx), PAD.top + chartH);
+          ctx.stroke(); ctx.setLineDash([]);
+        }
+
+        // 툴팁 박스 (겹침 없음)
+        drawTooltipBox(hoverIdx);
+
+        // X축 날짜
         labels.forEach(function(l, i) {
-          ctx.fillStyle = '#5A5F7D';
-          ctx.font = '11px Apple SD Gothic Neo, sans-serif';
+          ctx.fillStyle = hoverIdx === i ? '#4F6EF7' : '#5A5F7D';
+          ctx.font = (hoverIdx === i ? 'bold ' : '') + '11px Apple SD Gothic Neo, sans-serif';
           ctx.textAlign = 'center';
-          ctx.fillText(l, xPos(i), H - 14);
+          ctx.fillText(l, xPos(i), PAD.top + chartH + 20);
         });
-        ctx.fillStyle = '#4F6EF7';
-        ctx.font = '10px Apple SD Gothic Neo, sans-serif';
+
+        // X축 날씨 아이콘
+        ctx.font = '15px serif';
+        weather.forEach(function(w, i) {
+          ctx.textAlign = 'center';
+          ctx.fillText(w, xPos(i), PAD.top + chartH + 42);
+        });
+
+        // Y축 레이블
+        ctx.fillStyle = '#4F6EF7'; ctx.font = '10px Apple SD Gothic Neo, sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText('주문수량', PAD.left - 6, PAD.top + 8);
       }
@@ -929,8 +965,7 @@
           var d = Math.abs(xPos(i) - mx);
           if (d < minDist) { minDist = d; closest = i; }
         });
-        if (minDist < chartW / (n - 1) / 2) draw(closest);
-        else draw(-1);
+        draw(minDist < chartW / (n - 1) / 2 ? closest : -1);
       });
       canvas.addEventListener('mouseleave', function() { draw(-1); });
     })();
