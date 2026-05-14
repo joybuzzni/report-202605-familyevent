@@ -464,6 +464,55 @@
       border-left: 3px solid #9B59B6;
       padding-left: 10px;
     }
+
+/* ── SIDE NAV ── */
+.side-nav {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.side-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 8px 4px 4px;
+  border-radius: 20px;
+  transition: background 0.15s;
+  text-decoration: none;
+  justify-content: flex-end;
+}
+.side-nav-item:hover { background: rgba(79,110,247,0.08); }
+.side-nav-item .nav-label {
+  font-size: 11px;
+  color: var(--text-sub);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.15s, transform 0.15s;
+  font-family: 'Apple SD Gothic Neo', sans-serif;
+  pointer-events: none;
+}
+.side-nav:hover .nav-label { opacity: 1; transform: translateX(0); }
+.side-nav-item .nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+.side-nav-item.active .nav-dot {
+  background: var(--primary);
+  transform: scale(1.4);
+}
+.side-nav-item.active .nav-label { color: var(--primary); font-weight: 600; }
+@media (max-width: 1200px) { .side-nav { display: none; } }
   </style>
 </head>
 <body>
@@ -480,10 +529,23 @@
   </div>
 </div>
 
+<nav class="side-nav" id="sideNav">
+  <a class="side-nav-item" href="#sec-01"><span class="nav-label">01 핵심 KPI</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-02"><span class="nav-label">02 QoQ·YoY</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-03"><span class="nav-label">03 트래픽·유입</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-04"><span class="nav-label">04 이벤트 성과</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-05"><span class="nav-label">05 컴포넌트 클릭</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-06"><span class="nav-label">06 A/B 테스트</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-07"><span class="nav-label">07 마케팅 효율</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-08"><span class="nav-label">08 카테고리</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-09"><span class="nav-label">09 외부 환경</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-10"><span class="nav-label">10 푸시 성과</span><span class="nav-dot"></span></a>
+  <a class="side-nav-item" href="#sec-11"><span class="nav-label">11 종합 평가</span><span class="nav-dot"></span></a>
+</nav>
 <div class="container">
 
   <!-- ══════════════ 1. KPI ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-01">
     <div class="section-title"><span class="num">01</span> 핵심 KPI</div>
     <div class="kpi-grid">
       <div class="kpi-card">
@@ -539,7 +601,7 @@
   </div>
 
   <!-- ══════════════ 2. QoQ / YoY ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-02">
     <div class="section-title"><span class="num">02</span> QoQ · YoY 비교</div>
     <div class="compare-grid">
       <div class="compare-card">
@@ -566,7 +628,7 @@
   </div>
 
   <!-- ══════════════ 3. 트래픽 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-03">
     <div class="section-title"><span class="num">03</span> 트래픽 & 유입 분석</div>
     <div class="two-col">
       <div class="card">
@@ -593,7 +655,7 @@
   </div>
 
   <!-- ══════════════ 4. 이벤트 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-04">
     <div class="section-title"><span class="num">04</span> 이벤트 성과 지표</div>
 
     <div class="card" style="margin-bottom:14px;">
@@ -662,7 +724,7 @@
   </div>
 
   <!-- ══════════════ 5. 컴포넌트 클릭 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-05">
     <div class="section-title"><span class="num">05</span> 컴포넌트 클릭 분석</div>
     <div class="two-col">
       <div class="card">
@@ -713,7 +775,7 @@
   </div>
 
   <!-- ══════════════ 6. A/B 테스트 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-06">
     <div class="section-title"><span class="num">06</span> A/B 테스트 — 탭 디자인</div>
     <div class="ab-grid">
       <div class="ab-card">
@@ -752,7 +814,7 @@
   </div>
 
   <!-- ══════════════ 7. 마케팅 비용 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-07">
     <div class="section-title"><span class="num">07</span> 마케팅 비용 효율</div>
     <div class="card">
       <div class="table-wrap">
@@ -772,7 +834,7 @@
   </div>
 
   <!-- ══════════════ 8. 카테고리 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-08">
     <div class="section-title"><span class="num">08</span> 편성정보 카테고리 분석</div>
     <div class="card">
       <div class="card-title">총 편성 상품 15,031개 · 분류율 99.5%</div>
@@ -789,7 +851,7 @@
   </div>
 
   <!-- ══════════════ 9. 외부 환경 분석 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-09">
     <div class="section-title"><span class="num">09</span> 외부 환경 분석</div>
 
     <!-- 매출 동향 vs 외부 환경 카드 -->
@@ -1028,7 +1090,7 @@
   </div>
 
   <!-- ══════════════ 10. 푸시 성과 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-10">
     <div class="section-title"><span class="num">10</span> 푸시 성과 지표</div>
 
     <div class="card" style="margin-bottom:14px;">
@@ -1073,7 +1135,7 @@
   </div>
 
   <!-- ══════════════ 11. 종합 평가 ══════════════ -->
-  <div class="section">
+  <div class="section" id="sec-11">
     <div class="section-title"><span class="num">11</span> 종합 평가 & 시사점</div>
 
     <div class="score-grid" style="margin-bottom:14px;">
@@ -1490,5 +1552,40 @@
 })();
 </script>
 
+<script>
+(function() {
+  var items = document.querySelectorAll('.side-nav-item');
+  var secIds = ['sec-01','sec-02','sec-03','sec-04','sec-05','sec-06','sec-07','sec-08','sec-09','sec-10','sec-11'];
+  var secs = secIds.map(function(id) { return document.getElementById(id); });
+
+  function setActive(idx) {
+    items.forEach(function(item, i) {
+      item.classList.toggle('active', i === idx);
+    });
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var idx = secs.indexOf(entry.target);
+        if (idx >= 0) setActive(idx);
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+
+  secs.forEach(function(sec) { if (sec) observer.observe(sec); });
+
+  items.forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      var href = item.getAttribute('href');
+      var target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  setActive(0);
+})();
+</script>
 </body>
 </html>
