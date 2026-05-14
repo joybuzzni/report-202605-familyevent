@@ -249,9 +249,11 @@
     .stat-row:last-child { border-bottom: none; }
     .stat-label { color: var(--text-sub); }
     .stat-val { font-weight: 700; }
-    .stat-val.up { color: var(--up); background: #E8F8F0; padding: 2px 10px; border-radius: 20px; font-size: 13px; }
-    .stat-val.down { color: var(--down); background: #FEF0F0; padding: 2px 10px; border-radius: 20px; font-size: 13px; }
+    .stat-val.up { color: var(--up); }
+    .stat-val.down { color: var(--down); }
     .stat-val.neutral { color: var(--primary); }
+    .stat-row.row-up { background: #E8F8F0; border-radius: 8px; padding-left: 8px; padding-right: 8px; }
+    .stat-row.row-down { background: #FEF0F0; border-radius: 8px; padding-left: 8px; padding-right: 8px; }
 
     /* ── PROGRESS BAR ── */
     .bar-row { margin-bottom: 12px; }
@@ -605,20 +607,20 @@
         <h4>📈 QoQ — 2026 설날홈대전 대비</h4>
         <div class="stat-row"><span class="stat-label">설날 주문수량</span><span class="stat-val">25,187건</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문수량</span><span class="stat-val neutral">30,004건</span></div>
-        <div class="stat-row"><span class="stat-label">증감률</span><span class="stat-val up">+19.1% ↑</span></div>
+        <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+19.1% ↑</span></div>
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">설날 주문액</span><span class="stat-val">27.50억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
-        <div class="stat-row"><span class="stat-label">증감률</span><span class="stat-val up">+9.3% ↑</span></div>
+        <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+9.3% ↑</span></div>
         <div class="notice" style="margin-top:12px;">⚠️ 설날홈대전 초반(2/2-2/5) 홈 직접 인입 이슈 → 유입 과대 계상 가능성. QoQ 유입 수치 비교 시 보수적 해석 필요.</div>
       </div>
       <div class="compare-card">
         <h4>📊 YoY — 2025 오월愛모아페스타 대비</h4>
         <div class="stat-row"><span class="stat-label">오월愛 주문수량</span><span class="stat-val">29,756건</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문수량</span><span class="stat-val neutral">30,004건</span></div>
-        <div class="stat-row"><span class="stat-label">증감률</span><span class="stat-val up">+0.8% ↑</span></div>
+        <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+0.8% ↑</span></div>
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">오월愛 주문액</span><span class="stat-val">27.42억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
-        <div class="stat-row"><span class="stat-label">증감률</span><span class="stat-val up">+9.6% ↑</span></div>
+        <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+9.6% ↑</span></div>
         <div class="notice" style="margin-top:12px;">※ 오월愛(25.4.28-5.12, 14일)는 1주 평균 환산 적용 후 비교 — 가중치 사전 반영 완료.</div>
       </div>
     </div>
