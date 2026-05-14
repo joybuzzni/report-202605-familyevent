@@ -488,7 +488,8 @@
   text-decoration: none;
   justify-content: flex-start;
 }
-.side-nav-item:hover { background: rgba(79,110,247,0.08); }
+.side-nav-item:hover { background: rgba(79,110,247,0.08); transform: scale(1.06); transform-origin: left center; }
+.side-nav-item { transition: background 0.15s, transform 0.15s; }
 .side-nav-item .nav-dot {
   width: 7px;
   height: 7px;
