@@ -841,8 +841,11 @@
 
       function drawTooltipBox(hoverIdx) {
         if (hoverIdx < 0) return;
-        var bx = W - PAD.right - 160, by = PAD.top + 4;
         var bw = 155, bh = 62, br = 8;
+        var px = xPos(hoverIdx);
+        // 오른쪽 공간 부족하면 왼쪽에 표시
+        var bx = (px + bw + 16 > W - PAD.right) ? px - bw - 12 : px + 12;
+        var by = PAD.top + 4;
         ctx.fillStyle = 'rgba(255,255,255,0.95)';
         ctx.strokeStyle = '#E2E6F0';
         ctx.lineWidth = 1;
