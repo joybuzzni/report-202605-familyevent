@@ -306,6 +306,14 @@
       margin-top: 8px;
     }
 
+    /* ── UTILITY ── */
+    .c-up { color: var(--up); }
+    .c-down { color: var(--down); }
+    .c-sub { color: var(--text-sub); }
+    .c-primary { color: var(--primary); }
+    .kpi-unit { font-size: 14px; font-weight: 500; }
+    .card-gap { margin-bottom: 14px; }
+
     /* ── NOTICE BOX ── */
     .notice {
       background: #FFF9E6;
@@ -549,25 +557,25 @@
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-label">총 주문수량</div>
-        <div class="kpi-value">30,004<span style="font-size:14px;font-weight:500;">건</span></div>
+        <div class="kpi-value">30,004<span class="kpi-unit">건</span></div>
         <div class="kpi-sub">동일제휴사 기준</div>
         <div class="kpi-badge up">QoQ +8%</div>
       </div>
       <div class="kpi-card accent">
         <div class="kpi-label">총 주문액</div>
-        <div class="kpi-value">30.04<span style="font-size:14px;font-weight:500;">억</span></div>
+        <div class="kpi-value">30.04<span class="kpi-unit">억</span></div>
         <div class="kpi-sub">3,004,365,650원</div>
         <div class="kpi-badge up">QoQ +1%</div>
       </div>
       <div class="kpi-card green">
         <div class="kpi-label">ROAS</div>
-        <div class="kpi-value">822<span style="font-size:14px;font-weight:500;">배</span></div>
+        <div class="kpi-value">822<span class="kpi-unit">배</span></div>
         <div class="kpi-sub">마케팅 예산 대비 주문액</div>
         <div class="kpi-badge up">QoQ +52.8%</div>
       </div>
       <div class="kpi-card purple">
         <div class="kpi-label">CPA</div>
-        <div class="kpi-value">121.7<span style="font-size:14px;font-weight:500;">원/건</span></div>
+        <div class="kpi-value">121.7<span class="kpi-unit">원/건</span></div>
         <div class="kpi-sub">예산 ÷ 주문수</div>
         <div class="kpi-badge up">QoQ -38.7%</div>
       </div>
@@ -576,23 +584,23 @@
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-label">UV→구매 전환율</div>
-        <div class="kpi-value">2.66<span style="font-size:14px;">%</span></div>
+        <div class="kpi-value">2.66<span class="kpi-unit">%</span></div>
         <div class="kpi-sub">설날 1.80% 대비</div>
         <div class="kpi-badge up">+0.86%p ↑</div>
       </div>
       <div class="kpi-card accent">
         <div class="kpi-label">기획전 총 유입</div>
-        <div class="kpi-value">219,686<span style="font-size:14px;font-weight:500;">건</span></div>
+        <div class="kpi-value">219,686<span class="kpi-unit">건</span></div>
         <div class="kpi-sub">farm 186,362 / moa 33,324</div>
       </div>
       <div class="kpi-card green">
         <div class="kpi-label">포인트알람 설정</div>
-        <div class="kpi-value">36,593<span style="font-size:14px;font-weight:500;">건</span></div>
+        <div class="kpi-value">36,593<span class="kpi-unit">건</span></div>
         <div class="kpi-sub">방송알람 122건</div>
       </div>
       <div class="kpi-card purple">
         <div class="kpi-label">복권 전환율</div>
-        <div class="kpi-value">8.91<span style="font-size:14px;">%</span></div>
+        <div class="kpi-value">8.91<span class="kpi-unit">%</span></div>
         <div class="kpi-sub">설날 4.01% 대비</div>
         <div class="kpi-badge up">+2.2배 ↑</div>
       </div>
@@ -611,7 +619,7 @@
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">설날 주문액</span><span class="stat-val">29.74억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
         <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+1% ↑</span></div>
-        <div class="notice" style="margin-top:12px;">⚠️ 설날 초반(2/2-2/5) 홈 직접 인입 이슈 → 유입 과대 계상 가능성. 제목 더블클릭 시 산출 방식 확인.</div>
+        <div class="notice">⚠️ 설날 초반(2/2-2/5) 홈 직접 인입 이슈 → 유입 과대 계상 가능성. 제목 더블클릭 시 산출 방식 확인.</div>
       </div>
       <div class="compare-card">
         <h4>📊 YoY — 2025 오월愛모아페스타 대비</h4>
@@ -621,7 +629,7 @@
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">오월愛 주문액</span><span class="stat-val">29.67억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
         <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+1% ↑</span></div>
-        <div class="notice" style="margin-top:12px;">오월愛(25.4.28-5.12, 14일) 1-2주차 평균 환산 후 비교. 제목 더블클릭 시 산출 방식 확인.</div>
+        <div class="notice">오월愛(25.4.28-5.12, 14일) 1-2주차 평균 환산 후 비교. 제목 더블클릭 시 산출 방식 확인.</div>
       </div>
       <div class="compare-card">
         <h4>📅 이전 3주간 평균 대비</h4>
@@ -631,7 +639,7 @@
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">3주 평균 주문액</span><span class="stat-val">27.56억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
         <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+9% ↑</span></div>
-        <div class="notice" style="margin-top:12px;">행사 직전 3주(4/13~5/3) 일반 주간 평균 대비. 행사 효과 측정용 기준선(baseline) 지표. 제목 더블클릭 시 산출 방식 확인.</div>
+        <div class="notice">행사 직전 3주(4/13~5/3) 일반 주간 평균 대비. 행사 효과 측정용 기준선(baseline) 지표. 제목 더블클릭 시 산출 방식 확인.</div>
       </div>
     </div>
   </div>
@@ -667,7 +675,7 @@
   <div class="section" id="sec-04">
     <div class="section-title"><span class="num">04</span> 이벤트 성과 지표</div>
 
-    <div class="card" style="margin-bottom:14px;">
+    <div class="card card-gap">
       <div class="card-title">이벤트 구성 비교</div>
       <div class="table-wrap">
         <table>
@@ -689,7 +697,7 @@
       </div>
     </div>
 
-    <div class="card" style="margin-bottom:14px;">
+    <div class="card card-gap">
       <div class="card-title">핵심 지표 비교 (설날 vs 가정의달, moa 기준)</div>
       <div class="table-wrap">
         <table>
@@ -697,13 +705,13 @@
             <tr><th>지표</th><th class="td-num">설날홈대전</th><th class="td-num">가정의달</th><th class="td-num">증감</th></tr>
           </thead>
           <tbody>
-            <tr><td>총 유입수</td><td class="td-num">128,398</td><td class="td-num">33,324</td><td class="td-num" style="color:var(--down);">-74%</td></tr>
-            <tr><td>일평균 UV</td><td class="td-num">68,203</td><td class="td-num">69,078</td><td class="td-num" style="color:var(--text-sub);">동일</td></tr>
-            <tr><td>복권 참여수</td><td class="td-num">5,152</td><td class="td-num">2,969</td><td class="td-num" style="color:var(--down);">-42%</td></tr>
-            <tr class="highlight-row"><td>복권 전환율</td><td class="td-num">4.01%</td><td class="td-num">8.91%</td><td class="td-num" style="color:var(--up);">+2.2배 ↑</td></tr>
-            <tr><td>구매인증 응모수</td><td class="td-num">243</td><td class="td-num">91</td><td class="td-num" style="color:var(--down);">-63%</td></tr>
-            <tr><td>응모 전환율</td><td class="td-num">0.19%</td><td class="td-num">0.27%</td><td class="td-num" style="color:var(--up);">+0.08%p</td></tr>
-            <tr class="highlight-row"><td>사연(한줄편지)</td><td class="td-num">없음</td><td class="td-num">1,418건</td><td class="td-num" style="color:var(--up);">전환율 4.26%</td></tr>
+            <tr><td>총 유입수</td><td class="td-num">128,398</td><td class="td-num">33,324</td><td class="td-num c-down">-74%</td></tr>
+            <tr><td>일평균 UV</td><td class="td-num">68,203</td><td class="td-num">69,078</td><td class="td-num c-sub">동일</td></tr>
+            <tr><td>복권 참여수</td><td class="td-num">5,152</td><td class="td-num">2,969</td><td class="td-num c-down">-42%</td></tr>
+            <tr class="highlight-row"><td>복권 전환율</td><td class="td-num">4.01%</td><td class="td-num">8.91%</td><td class="td-num c-up">+2.2배 ↑</td></tr>
+            <tr><td>구매인증 응모수</td><td class="td-num">243</td><td class="td-num">91</td><td class="td-num c-down">-63%</td></tr>
+            <tr><td>응모 전환율</td><td class="td-num">0.19%</td><td class="td-num">0.27%</td><td class="td-num c-up">+0.08%p</td></tr>
+            <tr class="highlight-row"><td>사연(한줄편지)</td><td class="td-num">없음</td><td class="td-num">1,418건</td><td class="td-num c-up">전환율 4.26%</td></tr>
           </tbody>
         </table>
       </div>
@@ -720,11 +728,11 @@
             <tr><td>5/4 (월)</td><td class="td-num">3,059</td><td class="td-num">92</td><td class="td-num">3.01%</td><td class="td-num">177</td><td class="td-num">5.79%</td><td class="td-num">3</td><td>푸시+팝업</td></tr>
             <tr><td>5/5 (화)</td><td class="td-num">4,975</td><td class="td-num">118</td><td class="td-num">2.37%</td><td class="td-num">570</td><td class="td-num">11.46%</td><td class="td-num">17</td><td>팝업</td></tr>
             <tr><td>5/6 (수)</td><td class="td-num">4,456</td><td class="td-num">99</td><td class="td-num">2.22%</td><td class="td-num">385</td><td class="td-num">8.64%</td><td class="td-num">9</td><td>푸시+팝업</td></tr>
-            <tr class="highlight-row"><td>5/7 (목)</td><td class="td-num">5,123</td><td class="td-num"><strong>682</strong></td><td class="td-num" style="color:var(--up);"><strong>13.31%</strong></td><td class="td-num">415</td><td class="td-num">8.10%</td><td class="td-num">4</td><td>팝업 ⚠️스파이크</td></tr>
+            <tr class="highlight-row"><td>5/7 (목)</td><td class="td-num">5,123</td><td class="td-num"><strong>682</strong></td><td class="td-num c-up"><strong>13.31%</strong></td><td class="td-num">415</td><td class="td-num">8.10%</td><td class="td-num">4</td><td>팝업 ⚠️스파이크</td></tr>
             <tr><td>5/8 (금)</td><td class="td-num">4,196</td><td class="td-num">190</td><td class="td-num">4.53%</td><td class="td-num">240</td><td class="td-num">5.72%</td><td class="td-num">5</td><td>푸시+팝업 ⚠️복권에러</td></tr>
             <tr><td>5/9 (토)</td><td class="td-num">5,613</td><td class="td-num">98</td><td class="td-num">1.75%</td><td class="td-num">421</td><td class="td-num">7.50%</td><td class="td-num">33</td><td>푸시+팝업</td></tr>
             <tr><td>5/10 (일)</td><td class="td-num">4,394</td><td class="td-num">87</td><td class="td-num">1.98%</td><td class="td-num">400</td><td class="td-num">9.10%</td><td class="td-num">18</td><td>푸시+팝업</td></tr>
-            <tr><td>5/11 (월)</td><td class="td-num">1,508</td><td class="td-num">52</td><td class="td-num">3.45%</td><td class="td-num">361</td><td class="td-num" style="color:var(--up);"><strong>23.94%</strong></td><td class="td-num">2</td><td>팝업 (말일 잔존)</td></tr>
+            <tr><td>5/11 (월)</td><td class="td-num">1,508</td><td class="td-num">52</td><td class="td-num">3.45%</td><td class="td-num">361</td><td class="td-num c-up"><strong>23.94%</strong></td><td class="td-num">2</td><td>팝업 (말일 잔존)</td></tr>
             <tr class="highlight-row"><td><strong>합계</strong></td><td class="td-num"><strong>33,324</strong></td><td class="td-num"><strong>1,418</strong></td><td class="td-num"><strong>4.26%</strong></td><td class="td-num"><strong>2,969</strong></td><td class="td-num"><strong>8.91%</strong></td><td class="td-num"><strong>91</strong></td><td></td></tr>
           </tbody>
         </table>
@@ -778,7 +786,7 @@
             </tbody>
           </table>
         </div>
-        <div class="notice" style="margin-top:12px;">이벤트형(복권긁기)이 클릭 1위 — 이벤트 참여 의지 강함.<br>가전 카테고리: 편성 비중 6.4% 대비 클릭·알람 모두 2위 → 높은 효율.</div>
+        <div class="notice">이벤트형(복권긁기)이 클릭 1위 — 이벤트 참여 의지 강함.<br>가전 카테고리: 편성 비중 6.4% 대비 클릭·알람 모두 2위 → 높은 효율.</div>
       </div>
     </div>
   </div>
@@ -807,14 +815,14 @@
         <table>
           <thead><tr><th>날짜</th><th class="td-num">A안</th><th class="td-num">B안</th><th class="td-num">우세</th></tr></thead>
           <tbody>
-            <tr><td>5/4 (월)</td><td class="td-num">201</td><td class="td-num">160</td><td class="td-num" style="color:var(--primary);">A</td></tr>
-            <tr><td>5/5 (화)</td><td class="td-num">318</td><td class="td-num">286</td><td class="td-num" style="color:var(--primary);">A</td></tr>
+            <tr><td>5/4 (월)</td><td class="td-num">201</td><td class="td-num">160</td><td class="td-num c-primary">A</td></tr>
+            <tr><td>5/5 (화)</td><td class="td-num">318</td><td class="td-num">286</td><td class="td-num c-primary">A</td></tr>
             <tr><td>5/6 (수)</td><td class="td-num">211</td><td class="td-num">245</td><td class="td-num" style="color:var(--green);">B</td></tr>
-            <tr><td>5/7 (목)</td><td class="td-num">282</td><td class="td-num">278</td><td class="td-num" style="color:var(--primary);">A</td></tr>
+            <tr><td>5/7 (목)</td><td class="td-num">282</td><td class="td-num">278</td><td class="td-num c-primary">A</td></tr>
             <tr><td>5/8 (금)</td><td class="td-num">270</td><td class="td-num">304</td><td class="td-num" style="color:var(--green);">B</td></tr>
             <tr><td>5/9 (토)</td><td class="td-num">307</td><td class="td-num">317</td><td class="td-num" style="color:var(--green);">B</td></tr>
             <tr><td>5/10 (일)</td><td class="td-num">258</td><td class="td-num">286</td><td class="td-num" style="color:var(--green);">B</td></tr>
-            <tr><td>5/11 (월)</td><td class="td-num">77</td><td class="td-num">69</td><td class="td-num" style="color:var(--primary);">A</td></tr>
+            <tr><td>5/11 (월)</td><td class="td-num">77</td><td class="td-num">69</td><td class="td-num c-primary">A</td></tr>
             <tr class="highlight-row"><td><strong>합계</strong></td><td class="td-num"><strong>1,924</strong></td><td class="td-num"><strong>1,945</strong></td><td class="td-num" style="color:var(--green);"><strong>B +1.1%</strong></td></tr>
           </tbody>
         </table>
@@ -830,11 +838,11 @@
         <table>
           <thead><tr><th>항목</th><th class="td-num">설날홈대전</th><th class="td-num">가정의달</th><th class="td-num">변화</th></tr></thead>
           <tbody>
-            <tr><td>마케팅 예산 (큐레이션 이벤트)</td><td class="td-num">5,525,000원</td><td class="td-num">3,652,730원</td><td class="td-num" style="color:var(--down);">-33.9%</td></tr>
-            <tr><td>주문수량</td><td class="td-num">27,824건</td><td class="td-num">30,004건</td><td class="td-num" style="color:var(--up);">+7.8%</td></tr>
-            <tr class="highlight-row"><td>CPA (예산 ÷ 주문수)</td><td class="td-num">198.6원/건</td><td class="td-num">121.7원/건</td><td class="td-num" style="color:var(--up);">-38.7% ↓</td></tr>
-            <tr><td>주문액</td><td class="td-num">~29.7억</td><td class="td-num">30.04억</td><td class="td-num" style="color:var(--up);">+1.1%</td></tr>
-            <tr class="highlight-row"><td>ROAS (주문액 ÷ 예산)</td><td class="td-num">538배</td><td class="td-num">822배</td><td class="td-num" style="color:var(--up);">+52.8% ↑</td></tr>
+            <tr><td>마케팅 예산 (큐레이션 이벤트)</td><td class="td-num">5,525,000원</td><td class="td-num">3,652,730원</td><td class="td-num c-down">-33.9%</td></tr>
+            <tr><td>주문수량</td><td class="td-num">27,824건</td><td class="td-num">30,004건</td><td class="td-num c-up">+7.8%</td></tr>
+            <tr class="highlight-row"><td>CPA (예산 ÷ 주문수)</td><td class="td-num">198.6원/건</td><td class="td-num">121.7원/건</td><td class="td-num c-up">-38.7% ↓</td></tr>
+            <tr><td>주문액</td><td class="td-num">~29.7억</td><td class="td-num">30.04억</td><td class="td-num c-up">+1.1%</td></tr>
+            <tr class="highlight-row"><td>ROAS (주문액 ÷ 예산)</td><td class="td-num">538배</td><td class="td-num">822배</td><td class="td-num c-up">+52.8% ↑</td></tr>
           </tbody>
         </table>
       </div>
@@ -864,7 +872,7 @@
     <div class="section-title"><span class="num">09</span> 외부 환경 분석</div>
 
     <!-- 매출 동향 vs 외부 환경 카드 -->
-    <div class="card" style="margin-bottom:14px;">
+    <div class="card card-gap">
       <div class="card-title">매출 동향 vs 외부 환경 (일별)</div>
       <div style="overflow-x:auto;">
         <canvas id="trendChart" width="920" height="310" style="max-width:100%;display:block;"></canvas>
@@ -1042,7 +1050,7 @@
     })();
     </script>
 
-    <div class="two-col" style="margin-bottom:14px;">
+    <div class="two-col card-gap">
       <div class="card">
         <div class="card-title">연휴 & 기념일 영향</div>
         <div class="table-wrap">
@@ -1066,7 +1074,7 @@
           <table>
             <thead><tr><th>날짜</th><th>날씨</th><th>기온</th><th>영향</th></tr></thead>
             <tbody>
-              <tr class="highlight-row"><td>5/4 (월)</td><td>⛅ 비/흐림</td><td>20°C / 9°C</td><td style="color:var(--up);">야외 제한 → 유리</td></tr>
+              <tr class="highlight-row"><td>5/4 (월)</td><td>⛅ 비/흐림</td><td>20°C / 9°C</td><td>야외 제한 → 유리</td></tr>
               <tr><td>5/5 (화)</td><td>☀️ 맑음</td><td>-</td><td>나들이 집중</td></tr>
               <tr><td>5/6 (수)</td><td>☀️ 맑음</td><td>-</td><td>야외 활동 지속</td></tr>
               <tr><td>5/7 (목)</td><td>🌫️ 안개 후 맑음</td><td>-</td><td>쇼핑 재개</td></tr>
@@ -1102,15 +1110,15 @@
   <div class="section" id="sec-10">
     <div class="section-title"><span class="num">10</span> 푸시 성과 지표</div>
 
-    <div class="card" style="margin-bottom:14px;">
+    <div class="card card-gap">
       <div class="card-title">3개 행사 CTR 비교</div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>행사</th><th class="td-num">발송건수</th><th class="td-num">실제 CTR</th><th class="td-num">보정 CTR</th><th>정책</th><th class="td-num">최대 발송 기회</th></tr></thead>
           <tbody>
             <tr><td>오월愛모아페스타 (25.5)</td><td class="td-num">11건</td><td class="td-num">1.28%</td><td class="td-num"><strong>1.28%</strong></td><td>3회/일</td><td class="td-num">14일 × 3 = <strong>42회</strong></td></tr>
-            <tr><td>설날홈대전 (26.2)</td><td class="td-num">6건</td><td class="td-num">0.69%</td><td class="td-num" style="color:var(--primary);"><strong>→ 1.24%</strong></td><td>3회/일</td><td class="td-num">7일 × 3 = <strong>21회</strong></td></tr>
-            <tr class="highlight-row"><td>가정의달 (26.5)</td><td class="td-num">5건</td><td class="td-num">0.80%</td><td class="td-num" style="color:var(--up);"><strong>→ 1.44%</strong></td><td>2회/일</td><td class="td-num">7일 × 2 = <strong>14회</strong></td></tr>
+            <tr><td>설날홈대전 (26.2)</td><td class="td-num">6건</td><td class="td-num">0.69%</td><td class="td-num c-primary"><strong>→ 1.24%</strong></td><td>3회/일</td><td class="td-num">7일 × 3 = <strong>21회</strong></td></tr>
+            <tr class="highlight-row"><td>가정의달 (26.5)</td><td class="td-num">5건</td><td class="td-num">0.80%</td><td class="td-num c-up"><strong>→ 1.44%</strong></td><td>2회/일</td><td class="td-num">7일 × 2 = <strong>14회</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -1127,7 +1135,7 @@
               <tr><td>5/4 월</td><td>15:00</td><td>🔔[알림] 역대급 20% 오픈</td><td class="td-num">0.71%</td><td class="td-num">1.28%</td></tr>
               <tr><td>5/6 수</td><td>19:00</td><td>가족들께 편지 쓴 적이 ✍️</td><td class="td-num">0.53%</td><td class="td-num">0.95%</td></tr>
               <tr><td>5/8 금</td><td>11:00</td><td>선물 아직 고민이신가요? 🎁</td><td class="td-num">0.58%</td><td class="td-num">1.04%</td></tr>
-              <tr class="highlight-row"><td>5/9 토</td><td>08:30</td><td>📦[배송 중]</td><td class="td-num" style="color:var(--up);"><strong>1.51%</strong></td><td class="td-num" style="color:var(--up);"><strong>2.72%</strong></td></tr>
+              <tr class="highlight-row"><td>5/9 토</td><td>08:30</td><td>📦[배송 중]</td><td class="td-num c-up"><strong>1.51%</strong></td><td class="td-num c-up"><strong>2.72%</strong></td></tr>
               <tr><td>5/10 일</td><td>19:00</td><td>📫미확인 선물 메시지 (1)건</td><td class="td-num">0.66%</td><td class="td-num">1.19%</td></tr>
             </tbody>
           </table>
@@ -1147,7 +1155,7 @@
   <div class="section" id="sec-11">
     <div class="section-title"><span class="num">11</span> 종합 평가 & 시사점</div>
 
-    <div class="score-grid" style="margin-bottom:14px;">
+    <div class="score-grid card-gap">
       <div class="score-item"><div class="score-icon">📦</div><div class="score-title">QoQ 주문수</div><div class="score-result">+8%</div><div class="score-eval">✅</div></div>
       <div class="score-item"><div class="score-icon">💰</div><div class="score-title">QoQ 주문액</div><div class="score-result">+1%</div><div class="score-eval">✅</div></div>
       <div class="score-item"><div class="score-icon">📅</div><div class="score-title">YoY 주문수량</div><div class="score-result">-7%</div><div class="score-eval">✅</div></div>
@@ -1159,7 +1167,7 @@
       <div class="score-item"><div class="score-icon">🔬</div><div class="score-title">A/B 테스트</div><div class="score-result">B안 알람 +27%</div><div class="score-eval">✅</div></div>
     </div>
 
-    <div class="card" style="margin-bottom:14px;">
+    <div class="card card-gap">
       <div class="card-title">⚠️ 특이사항 & 주의점</div>
       <div class="stat-row"><span class="stat-label">설날 유입 왜곡</span><span>홈 직접 인입 이슈(2/5 원복) → 설날 유입 과대 계상 가능성</span></div>
       <div class="stat-row"><span class="stat-label">복권 에러 5/8</span><span>00시~10:40 오류 → 당일 집계 일부 누락 가능성</span></div>
