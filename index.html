@@ -371,15 +371,15 @@
     }
 
     /* ── HINT INDICATOR ── */
-    .kpi-label, .card-title {
+    .kpi-label, .card-title, .compare-card h4 {
       cursor: help;
       position: relative;
       transition: color 0.15s;
     }
-    .kpi-label:hover, .card-title:hover {
+    .kpi-label:hover, .card-title:hover, .compare-card h4:hover {
       color: #7B4FF7;
     }
-    .kpi-label::after, .card-title::after {
+    .kpi-label::after, .card-title::after, .compare-card h4::after {
       content: ' ⊕';
       color: #7B4FF7;
       font-size: 11px;
@@ -388,7 +388,7 @@
       transition: opacity 0.15s;
       pointer-events: none;
     }
-    .kpi-label:hover::after, .card-title:hover::after {
+    .kpi-label:hover::after, .card-title:hover::after, .compare-card h4:hover::after {
       opacity: 1;
     }
 
