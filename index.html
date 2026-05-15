@@ -611,7 +611,7 @@
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">설날 주문액</span><span class="stat-val">29.74억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
         <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+1% ↑</span></div>
-        <div class="notice" style="margin-top:12px;">11개 제휴사 전체 기준, NS 동일 수치 적용. ⚠️ 설날 초반(2/2-2/5) 홈 직접 인입 이슈 → 유입 과대 계상 가능성.</div>
+        <div class="notice" style="margin-top:12px;">⚠️ 설날 초반(2/2-2/5) 홈 직접 인입 이슈 → 유입 과대 계상 가능성. 제목 더블클릭 시 산출 방식 확인.</div>
       </div>
       <div class="compare-card">
         <h4>📊 YoY — 2025 오월愛모아페스타 대비</h4>
@@ -621,7 +621,7 @@
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">오월愛 주문액</span><span class="stat-val">29.67억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
         <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+1% ↑</span></div>
-        <div class="notice" style="margin-top:12px;">11개 제휴사 전체 기준, NS 동일 수치 적용. 오월愛(25.4.28-5.12, 14일) 1-2주차 평균 환산 후 비교.</div>
+        <div class="notice" style="margin-top:12px;">오월愛(25.4.28-5.12, 14일) 1-2주차 평균 환산 후 비교. 제목 더블클릭 시 산출 방식 확인.</div>
       </div>
       <div class="compare-card">
         <h4>📅 이전 3주간 평균 대비</h4>
@@ -631,7 +631,7 @@
         <div class="stat-row" style="margin-top:8px;"><span class="stat-label">3주 평균 주문액</span><span class="stat-val">27.56억</span></div>
         <div class="stat-row"><span class="stat-label">가정의달 주문액</span><span class="stat-val neutral">30.04억</span></div>
         <div class="stat-row row-up"><span class="stat-label">증감률</span><span class="stat-val up">+9% ↑</span></div>
-        <div class="notice" style="margin-top:12px;">행사 직전 3주(4/13~5/3) 전 제휴사 주간 평균 대비. 계절 기저 대비 실질 성과를 보여주는 지표.</div>
+        <div class="notice" style="margin-top:12px;">행사 직전 3주(4/13~5/3) 일반 주간 평균 대비. 행사 효과 측정용 기준선(baseline) 지표. 제목 더블클릭 시 산출 방식 확인.</div>
       </div>
     </div>
   </div>
@@ -1210,6 +1210,41 @@
 <script>
 (function () {
   const INFO_MAP = {
+    "📈 QoQ — 2026 설날홈대전 대비": {
+      title: "QoQ 산출 방식 — 설날홈대전 대비",
+      rows: [
+        ["항목", "설날홈대전", "가정의달", "증감률"],
+        ["주문수량", "27,824건", "30,004건", "+8%"],
+        ["주문액", "29.74억", "30.04억", "+1%"],
+        ["기준", "11개 제휴사 전체", "11개 제휴사 전체", "-"],
+        ["NS홈쇼핑", "설날 실적 동일 수치 적용", "2,637건 / 2.25억", "0%"]
+      ],
+      source: "Budibase 주문 데이터 + 2026 가정의달 성과 분석 시트",
+      note: "⚠️ 설날 초반(2/2-2/5) 홈 직접 인입 이슈로 유입 과대 계상 가능성 있음."
+    },
+    "📊 YoY — 2025 오월愛모아페스타 대비": {
+      title: "YoY 산출 방식 — 오월愛모아페스타 대비",
+      rows: [
+        ["항목", "오월愛모아페스타", "가정의달", "증감률"],
+        ["주문수량", "32,393건", "30,004건", "-7%"],
+        ["주문액", "29.67억", "30.04억", "+1%"],
+        ["기준", "1-2주차 평균 (14일→7일 환산)", "11개 제휴사 전체", "-"],
+        ["NS홈쇼핑", "동일 수치 적용", "2,637건 / 2.25억", "0%"]
+      ],
+      source: "Budibase 주문 데이터 + 2026 가정의달 성과 분석 시트",
+      note: "오월愛는 14일 행사(4/28~5/12). 1-2주차 평균 환산으로 7일 기준 가정의달과 비교."
+    },
+    "📅 이전 3주간 평균 대비": {
+      title: "이전 3주간 평균 대비 산출 방식",
+      rows: [
+        ["항목", "이전 3주 평균", "가정의달", "증감률"],
+        ["주문수량", "28,042건", "30,004건", "+7%"],
+        ["주문액", "27.56억", "30.04억", "+9%"],
+        ["비교 기간", "4/13~5/3 (3주)", "5/4~5/10 (7일)", "-"]
+      ],
+      source: "Budibase 주문 데이터 + 2026 가정의달 성과 분석 시트",
+      note: "행사 직전 3주 일반 주간 평균 대비. 행사 효과를 측정하기 위한 기준선(baseline) 지표."
+    },
     "총 주문수량": {
       title: "총 주문수량",
       rows: [
@@ -1532,7 +1567,7 @@
   }
 
   // 더블클릭 이벤트 등록
-  document.querySelectorAll('.kpi-label, .card-title').forEach(function(el) {
+  document.querySelectorAll('.kpi-label, .card-title, .compare-card h4').forEach(function(el) {
     el.addEventListener('dblclick', function(e) {
       e.stopPropagation();
       const key = el.textContent.trim();
